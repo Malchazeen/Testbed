@@ -12,6 +12,7 @@
                 {
                     "a": true,
                     "b": false,
+                    "c": false
                 };
             return model;
         });
@@ -22,12 +23,17 @@
             font-size: 20px;
             cursor: pointer;
         }
+        iframe {
+            display: block;
+            border: none;
+        }
     </style>
 </head>
 <body ng-app="goldTracker">
     <div ng-controller="interfaceController as ctrl">
-        <a ng-click="ctrl.a=true; ctrl.b=false;">main</a>
-        <a ng-click="ctrl.a=false; ctrl.b=true;">sub</a>
+        <a ng-click="ctrl.a=true; ctrl.b=false; ctrl.c=false">main</a>
+        <a ng-click="ctrl.a=false; ctrl.b=true; ctrl.c=false">sub</a>
+        <a ng-click="ctrl.a=false; ctrl.b=false; ctrl.c=true">sub2</a>
         <!-- TradingView Widget BEGIN -->
         <div ng-show="ctrl.a" class="tradingview-widget-container">
             <div class="tradingview-widget-container__widget"></div>
@@ -58,6 +64,7 @@
             </script>
         </div>
         <!-- TradingView Widget END -->
+        <iframe ng-show="ctrl.c" src="http://203.154.170.8/hmp/hmp.html" height="110" width="1260"></iframe>
     </div>
 </body>
 </html>
