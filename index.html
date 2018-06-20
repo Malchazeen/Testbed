@@ -11,8 +11,7 @@
             var model =
                 {
                     "a": true,
-                    "b": false,
-                    "c": false
+                    "b": false
                 };
             return model;
         });
@@ -31,14 +30,20 @@
 </head>
 <body ng-app="goldTracker">
     <div ng-controller="interfaceController as ctrl">
-        <a ng-click="ctrl.a=true; ctrl.b=false; ctrl.c=false">main</a>
-        <a ng-click="ctrl.a=false; ctrl.b=true; ctrl.c=false">sub</a>
-        <a ng-click="ctrl.a=false; ctrl.b=false; ctrl.c=true">sub2</a>
+        <a ng-click="ctrl.a=true; ctrl.b=false">main</a>
+        <a ng-click="ctrl.a=false; ctrl.b=true">sub</a>
         <!-- TradingView Widget BEGIN -->
         <div ng-show="ctrl.a" class="tradingview-widget-container">
             <div class="tradingview-widget-container__widget"></div>
             <script src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js">{ "locale": "en", "symbol": "OANDA:XAUUSD", "width": 350 }</script>    <!--ใน script จะมีจุดที่ get InnerHTML ของ node script นี้ แล้วส่งไป request web api ใน format ของ json ทำให้ InnerHTML ต้องมี json valid format-->
         </div>
+        <!-- TradingView Widget END -->
+        <!-- TradingView Widget BEGIN -->
+        <div ng-show="ctrl.a" class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js">{ "locale": "en", "symbol": "OANDA:USDTHB", "width": 350 }</script>    <!--ใน script จะมีจุดที่ get InnerHTML ของ node script นี้ แล้วส่งไป request web api ใน format ของ json ทำให้ InnerHTML ต้องมี json valid format-->
+        </div>
+        <!-- TradingView Widget END -->
         <!-- TradingView Widget BEGIN -->
         <div ng-show="ctrl.b" class="tradingview-widget-container">
             <div id="tradingview_d6bd9"></div>
@@ -64,7 +69,6 @@
             </script>
         </div>
         <!-- TradingView Widget END -->
-        <iframe ng-show="ctrl.c" src="http://203.154.170.8/hmp/hmp.html" height="110" width="1260"></iframe>
     </div>
 </body>
 </html>
