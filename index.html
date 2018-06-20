@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
+    <script>
+        var module = angular.module("goldTracker", []);
+        var controller = module.controller("interfaceController", function () {
+            var model =
+                {
+                    "a": true,
+                    "b": false,
+                };
+            return model;
+        });
+
+    </script>
+    <style>
+        a {
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body ng-app="goldTracker">
+    <div ng-controller="interfaceController as ctrl">
+        <a ng-click="ctrl.a=true; ctrl.b=false;">main</a>
+        <a ng-click="ctrl.a=false; ctrl.b=true;">sub</a>
+        <!-- TradingView Widget BEGIN -->
+        <div ng-show="ctrl.a" class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js">{ "locale": "en", "symbol": "OANDA:XAUUSD", "width": 350 }</script>    <!--ใน script จะมีจุดที่ get InnerHTML ของ node script นี้ แล้วส่งไป request web api ใน format ของ json ทำให้ InnerHTML ต้องมี json valid format-->
+        </div>
+        <!-- TradingView Widget BEGIN -->
+        <div ng-show="ctrl.b" class="tradingview-widget-container">
+            <div id="tradingview_d6bd9"></div>
+            <script src="https://s3.tradingview.com/tv.js"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    new TradingView.widget(
+                        {
+                            "width": 980,
+                            "height": 610,
+                            "symbol": "OANDA:XAUUSD",
+                            "interval": "D",
+                            "timezone": "Asia/Bangkok",
+                            "theme": "Light",
+                            "style": "1",
+                            "locale": "en",
+                            "toolbar_bg": "#f1f3f6",
+                            "enable_publishing": false,
+                            "withdateranges": true,
+                            "save_image": false,
+                            "container_id": "tradingview_d6bd9"
+                        }
+                    )
+                });
+            </script>
+        </div>
+        <!-- TradingView Widget END -->
+    </div>
+</body>
+</html>
