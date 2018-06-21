@@ -7,45 +7,82 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
     <script>
         var module = angular.module("goldTracker", []);
-        var controller = module.controller("interfaceController", function () {
+        var controller = module.controller("interfaceController", ["$http", function ($http) {
             var model =
                 {
                     "a": true,
-                    "b": false
+                    "b": false,
+                    "goldspot": 0,
+                    "goldspotmult": 0,
+                    "exchange": 0,
+                    "exchangemult": 0
                 };
+            $http.get("https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=XAU&to_currency=USD&apikey=12HWWJO0EGZ9W4PS")
+                .then(function (response) {
+                    var resp = response.data["Realtime Currency Exchange Rate"];
+                    model.goldspot = parseFloat(resp["5. Exchange Rate"]);
+                    model.goldspotmult = 1;
+                });
+            $http.get("https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=THB&apikey=12HWWJO0EGZ9W4PS")
+                .then(function (response) {
+                    var resp = response.data["Realtime Currency Exchange Rate"];
+                    model.exchange = parseFloat(resp["5. Exchange Rate"]);
+                    model.exchangemult = 1;
+                });
             return model;
-        });
+        }]);
 
     </script>
     <style>
+        #nav {
+            background-color: deepskyblue;
+        }
+        .container {
+            margin-top: 20px;
+            border: groove;
+            background-color: aliceblue;
+        }
         a {
+            display: inline-block;
+            padding: 10px;
             font-size: 20px;
             cursor: pointer;
+        }
+        a:hover {
+            background-color: rgba(128, 128, 128, 0.5);
+            color: white;
         }
         iframe {
             display: block;
             border: none;
         }
+        .tradingview-widget-container {
+            display: inline-block;
+            width: 980px;
+        }
     </style>
 </head>
 <body ng-app="goldTracker">
     <div ng-controller="interfaceController as ctrl">
-        <a ng-click="ctrl.a=true; ctrl.b=false">main</a>
-        <a ng-click="ctrl.a=false; ctrl.b=true">sub</a>
+        <div id="nav">
+            <a ng-click="ctrl.a=true; ctrl.b=false">Ticker</a>
+            <a ng-click="ctrl.a=false; ctrl.b=true">Graph</a>
+        </div>
         <!-- TradingView Widget BEGIN -->
-        <div ng-show="ctrl.a" class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js">{ "locale": "en", "symbol": "OANDA:XAUUSD", "width": 350 }</script>    <!--ใน script จะมีจุดที่ get InnerHTML ของ node script นี้ แล้วส่งไป request web api ใน format ของ json ทำให้ InnerHTML ต้องมี json valid format-->
+        <div class="container" ng-show="ctrl.a">
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js">{ "locale": "en", "symbol": "OANDA:XAUUSD", "width": 350 }</script>    <!--ใน script จะมีจุดที่ get InnerHTML ของ node script นี้ แล้วส่งไป request web api ใน format ของ json ทำให้ InnerHTML ต้องมี json valid format-->
+            </div>
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js">{ "locale": "en", "symbol": "OANDA:USDTHB", "width": 350 }</script>    <!--ใน script จะมีจุดที่ get InnerHTML ของ node script นี้ แล้วส่งไป request web api ใน format ของ json ทำให้ InnerHTML ต้องมี json valid format-->
+            </div>
+            <p>Current Price in THB ~{{((ctrl.goldspot + 0.6) * 0.49 * 0.965 * (ctrl.exchange + 0.02) + 15) * ctrl.goldspotmult * ctrl.exchangemult | currency}}</p>
         </div>
         <!-- TradingView Widget END -->
         <!-- TradingView Widget BEGIN -->
-        <div ng-show="ctrl.a" class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js">{ "locale": "en", "symbol": "OANDA:USDTHB", "width": 350 }</script>    <!--ใน script จะมีจุดที่ get InnerHTML ของ node script นี้ แล้วส่งไป request web api ใน format ของ json ทำให้ InnerHTML ต้องมี json valid format-->
-        </div>
-        <!-- TradingView Widget END -->
-        <!-- TradingView Widget BEGIN -->
-        <div ng-show="ctrl.b" class="tradingview-widget-container">
+        <div ng-show="ctrl.b" class="container tradingview-widget-container">
             <div id="tradingview_d6bd9"></div>
             <script src="https://s3.tradingview.com/tv.js"></script>
             <script>
